@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>Seckill-Parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <!-- 关键：父工程打包方式必须是pom -->
+    <packaging>pom</packaging>
+
+    <!-- 1. 定义所有子模块 -->
+    <modules>
+        <module>seckill-common</module>
+        <module>seckill-gateway</module>
+        <module>seckill-product</module>
+        <module>seckill-order</module>
+        <module>seckill-inventory</module>
+    </modules>
+    <properties>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot.version>3.4.5</spring-boot.version>
+        <spring-cloud.version>2022.0.3</spring-cloud.version>
+        <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
+    </properties>
+    <!-- 3. 依赖管理（所有子模块共享） -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Boot依赖管理 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+
+            <!-- Spring Cloud依赖管理 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Spring Cloud Alibaba依赖管理 -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>6.1.10</version> <!-- 使用与 Spring Boot 3.1.x 兼容的版本 -->
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- 4. 所有子模块共享的依赖 -->
+    <dependencies>
+
+        <!-- Lombok自动生成getter/setter等 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <!-- 单元测试 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
+    </dependencies>
+</project>

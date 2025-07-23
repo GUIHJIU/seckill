@@ -1,0 +1,96 @@
+# ./docker-compose-infra.yml
+version: '3.8'
+
+services:
+  # Nacos服务注册与配置中心
+  nacos:
+    image: nacos/nacos-server:v2.2.0
+    container_name: nacos
+    ports:
+      - "8848:8848"
+      - "9848:9848"  # gRPC端口
+    environment:
+      MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&allowPublicKeyRetrieval=true
+      MODE: standalone  # 单机模式
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_SERVICE_HOST: mysql
+      MYSQL_SERVICE_DB_NAME: nacos_config
+      MYSQL_SERVICE_USER: root
+      MYSQL_SERVICE_PASSWORD: root
+      NACOS_AUTH_ENABLE: "true"  # 开启认证
+      NACOS_AUTH_TOKEN: "dGhpcyBpcyBhIHNlY3JldCBrZXkgb2YgMzIgYnl0ZXMh"
+    depends_on:
+      - mysql
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8848/nacos"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  # Redis缓存服务
+  redis:
+    image: redis:7.0.10-alpine
+    container_name: redis
+    ports:
+      - "6380:6379"
+    command: redis-server --save 60 1 --requirepass 123456
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--pass", "123456", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # MySQL数据库
+  mysql:
+    image: mysql:8.0.33
+    container_name: mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: seckill_db
+      MYSQL_MULTIPLE_DATABASES: "seckill_db,nacos_config"
+      MYSQL_INITDB_SKIP_TZINFO: 1
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # RocketMQ服务
+  rocketmq-namesrv:
+    image: apache/rocketmq:5.1.0
+    container_name: rocketmq-namesrv
+    ports:
+      - "9877:9876"
+    command: sh mqnamesrv
+    environment:
+      JAVA_OPT_EXT: "-Xms512m -Xmx512m -Xmn128m"
+
+  rocketmq-broker:
+    image: apache/rocketmq:5.1.0
+    container_name: rocketmq-broker
+    ports:
+      - "10913:10909"
+      - "10914:10911"
+      - "10915:10912"
+    command: sh mqbroker -n rocketmq-namesrv:9876
+    environment:
+      JAVA_OPT_EXT: "-Xms1g -Xmx1g -Xmn512m"
+      ROCKETMQ_NAMESRV_ADDR: "rocketmq-namesrv:9876"
+    depends_on:
+      - rocketmq-namesrv
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:10911"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql-data:
+  redis-data:
