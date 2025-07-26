@@ -13,12 +13,12 @@ public enum ErrorCode {
     SERVICE_BUSY(503, "服务繁忙"),
 
     // 业务自定义错误码（示例）
-    COURSE_NOT_EXIST(1001, "课程不存在"),
+    PRODUCT_NOT_EXIST(1001, "商品不存在"),
     STOCK_NOT_ENOUGH(1002, "库存不足"),
     TIME_CONFLICT(1003, "时间冲突"),
-    UPDATE_COURSE_ERROR(1004, "课程更新失败"),
-    OPERATION_FAILED(1005, "选课失败"),
-    DUPLICATE_SELECTION(1006, "重复选课");
+    UPDATE_ERROR(1004, "商品更新失败"),
+    OPERATION_FAILED(1005, "秒杀失败"),
+    DUPLICATE_SELECTION(1006, "重复秒杀");
 
 
     private final Integer code;
