@@ -1,7 +1,7 @@
-package Controller;
+package com.example.seckillproduct.Controller;
 
-import Entity.Product;
-import Services.ProductService;
+import com.example.seckillproduct.services.ProductService;
+import com.example.seckillproduct.entity.Product;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

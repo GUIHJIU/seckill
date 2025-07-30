@@ -4,7 +4,7 @@ version: '3.8'
 services:
   # Nacos服务注册与配置中心
   nacos:
-    image: nacos/nacos-server:v2.2.0
+    image: nacos/nacos-server:v2.3.2
     container_name: nacos
     ports:
       - "8848:8848"
@@ -64,7 +64,7 @@ services:
 
   # RocketMQ服务
   rocketmq-namesrv:
-    image: apache/rocketmq:5.1.0
+    image: apache/rocketmq:5.1.4
     container_name: rocketmq-namesrv
     ports:
       - "9877:9876"
@@ -73,7 +73,7 @@ services:
       JAVA_OPT_EXT: "-Xms512m -Xmx512m -Xmn128m"
 
   rocketmq-broker:
-    image: apache/rocketmq:5.1.0
+    image: apache/rocketmq:5.1.4
     container_name: rocketmq-broker
     ports:
       - "10913:10909"

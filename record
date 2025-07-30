@@ -1,0 +1,5 @@
+# 依赖项问题：
+##   mybatis:
+- 
+-       mybatis-plus中，mybatis-plus-boot-starter是为spring1.x和2.x配置的，如果在springboot3.x使用会导致各种各样的异常，应该使用mybatis-plus-spring-boot3-starter
+-       例如：当使用错误的 starter 时：MyBatis 尝试使用 SqlSessionFactoryBean 创建 Mapper 代理,由于依赖冲突，Spring 无法正确解析泛型类型信息,在获取 factoryBeanObjectType 属性时：,预期：Class<BaseMapper<Product>>,实际：错误依赖导致获取到 String 类型

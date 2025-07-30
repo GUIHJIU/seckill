@@ -1,4 +1,4 @@
-package Entity;
+package com.example.seckillproduct.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import jakarta.validation.constraints.*;
@@ -65,4 +65,6 @@ public class Product {
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
+    @Version
+    private Integer version;
 }

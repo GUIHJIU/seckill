@@ -18,7 +18,8 @@ public enum ErrorCode {
     TIME_CONFLICT(1003, "时间冲突"),
     UPDATE_ERROR(1004, "商品更新失败"),
     OPERATION_FAILED(1005, "秒杀失败"),
-    DUPLICATE_SELECTION(1006, "重复秒杀");
+    DUPLICATE_SELECTION(1006, "重复秒杀"),
+    REDIS_ERROR(1101, "Redis异常" );
 
 
     private final Integer code;
