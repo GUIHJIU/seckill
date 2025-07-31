@@ -10,7 +10,7 @@ CREATE DATABASE IF NOT EXISTS `seckill_db` CHARACTER SET utf8mb4 COLLATE utf8mb4
 USE `seckill_db`;
 
 -- 商品表 (根据实体类调整)
-CREATE TABLE `product` (
+CREATE TABLE IF NOT EXISTS `product` (
                            `id` BIGINT PRIMARY KEY COMMENT '商品ID',
                            `name` VARCHAR(100) NOT NULL COMMENT '商品名称',
                            `description` VARCHAR(500) COMMENT '商品描述',
@@ -30,7 +30,7 @@ CREATE TABLE `product` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 订单表 (增加逻辑删除字段)
-CREATE TABLE `order` (
+CREATE TABLE IF NOT EXISTS `order` (
                          `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
                          `order_no` VARCHAR(32) NOT NULL COMMENT '订单号',
                          `user_id` BIGINT NOT NULL COMMENT '用户ID',
@@ -44,8 +44,22 @@ CREATE TABLE `order` (
                          UNIQUE KEY `uniq_order_no` (`order_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 库存表
+CREATE TABLE IF NOT EXISTS `inventory` (
+                             `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+                             `product_id` BIGINT NOT NULL COMMENT '商品ID',
+                             `quantity` INT NOT NULL DEFAULT 0 COMMENT '库存数量',
+                             `sold` INT NOT NULL DEFAULT 0 COMMENT '已售数量',
+                             `locked` INT NOT NULL DEFAULT 0 COMMENT '锁定库存',
+                             `version` INT DEFAULT 0 COMMENT '乐观锁版本',
+                             `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0-未删除,1-已删除',
+                             `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
+                             `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                             UNIQUE KEY `uniq_product_id` (`product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- 库存流水表 (增加逻辑删除字段)
-CREATE TABLE `inventory_log` (
+CREATE TABLE IF NOT EXISTS `inventory_log` (
                                  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
                                  `product_id` BIGINT NOT NULL,
                                  `order_no` VARCHAR(32) NOT NULL,
